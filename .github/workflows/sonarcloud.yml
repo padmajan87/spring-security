@@ -1,0 +1,21 @@
+name: Build and publish image to IBM Cloud Container Registry
+on:
+  release:
+    types: [published]
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+    branches:
+      - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out release
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}  # Checkout PR code
+          fetch-depth: 0 #to pull history
+      - name: SonarCloud Scan
+        uses: SonarSource/sonarcloud-github-action@fd88b7d7ccbaefd23d8f36f73b59db7a3d246602
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
